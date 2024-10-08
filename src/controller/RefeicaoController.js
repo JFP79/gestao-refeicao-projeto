@@ -169,7 +169,25 @@ class RefeicaoController {
         }
       });
 
-      return res.status(200).json({ refeicoes });
+      let currentSequence = [];
+      let bestSequence = [];
+    
+      refeicoes.forEach((refeicao) => {
+        if (refeicao.isDiet === true) {
+          currentSequence.push(refeicao);
+        } else {
+          if (currentSequence.length > bestSequence.length) {
+            bestSequence = [...currentSequence];
+          }
+          currentSequence = [];
+        }
+      });
+
+      if (currentSequence.length > bestSequence.length) {
+        bestSequence = [...currentSequence];
+      }
+
+      return res.status(200).json({ bestSequence });
     }catch (error) {
       return res.status(400).json({ error: error.message });
     }
